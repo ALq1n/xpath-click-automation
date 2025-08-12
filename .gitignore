@@ -1,0 +1,52 @@
+# --- Maven ---
+target/
+dependency-reduced-pom.xml
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# --- IntelliJ IDEA / JetBrains ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# --- VS Code ---
+.vscode/
+
+# --- Eclipse ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+# --- NetBeans ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# --- Reports & run artifacts (optional) ---
+allure-results/
+allure-report/
+screenshots/
+
+# --- Logs & crash dumps ---
+logs/
+*.log
+hs_err_pid*
+replay_pid*
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+desktop.ini
+/.idea/
