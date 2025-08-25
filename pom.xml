@@ -15,6 +15,7 @@
     <selenium.version>4.35.0</selenium.version>
     <wdm.version>6.2.0</wdm.version>
     <junit.version>5.10.2</junit.version>
+    <allure.version>2.24.0</allure.version>
   </properties>
 
   <dependencies>
@@ -39,6 +40,15 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Allure for JUnit 5 -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -53,11 +63,57 @@
         </configuration>
       </plugin>
 
+      <!-- Make sure tests run under JUnit Platform and export Allure results -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
+        <configuration>
+          <useModulePath>false</useModulePath>
+          <systemPropertyVariables>
+            <!-- Where Allure writes raw results -->
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
+
+      <!-- ADDED: Allure Maven plugin (to generate/serve reports) -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.12.0</version>
+        <configuration>
+          <reportVersion>${allure.version}</reportVersion>
+          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+          <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.12.0</version>
+        <configuration>
+          <reportVersion>${allure.version}</reportVersion>
+          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+          <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
+        </configuration>
+        <executions>
+          <!-- Generate the HTML report after tests -->
+          <execution>
+            <id>allure-report</id>
+            <phase>test</phase>
+            <goals><goal>report</goal></goals>
+          </execution>
+          <!-- Start a local server and open the report in your browser -->
+          <execution>
+            <id>allure-serve</id>
+            <phase>test</phase>
+            <goals><goal>serve</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 </project>

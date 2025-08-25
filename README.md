@@ -1,6 +1,9 @@
 # 🖱️ Selenium XPath & CSS Click Automation
 
 A Java + Selenium + Maven automation tool that automatically clicks specified elements on a webpage using XPath and CSS Selectors, and saves screenshots after each click.  
+
+Extended with **JUnit 5 tests** and **Allure reporting** for HTML reports with before/after click screenshots and automatic failure attachments.  
+
 Designed for software testers, QA engineers, and developers to speed up UI testing and element verification.
 
 ---
@@ -20,6 +23,12 @@ Designed for software testers, QA engineers, and developers to speed up UI testi
 - **Çoklu Selector İşleme**: Birden fazla XPath veya CSS Selector art arda işlenebilir.
 - **Kolay Özelleştirme**: `xpaths[]` ve `cssSelectors[]` dizileri kolayca değiştirilebilir.
 - **Platform Bağımsız**: Windows, macOS ve Linux’ta çalışır.
+- **JUnit 5 Testleri**: `XPathClickAutoTest.java` altında örnek testler.
+- **Allure Entegrasyonu**:
+   - Raporlar `target/allure-results/` klasörüne kaydedilir.
+   - Başarısız testlerde otomatik ekran görüntüsü ve sayfa kaynağı eklenir.
+   - Tıklamalardan önce/sonra ekran görüntüleri rapora eklenebilir.
+- **Allure Dashboard**: `mvn allure:serve` ile tarayıcıda açılır.
 
 ---
 
@@ -51,6 +60,22 @@ git clone https://github.com/kullanici-adi/xpath-click-automation.git
 3. **Çalıştırın**:  
    Kod çalıştırıldığında tüm tıklamalar yapılır ve ekran görüntüleri kaydedilir.
 
+### Normal Çalıştırma
+`XPathClickAuto.java` içindeki main metodunu çalıştırarak tıklama senaryosunu başlatın.
+
+### Test Çalıştırma
+```bash
+mvn clean test
+```
+- JUnit testleri çalışır
+- Sonuçlar `target/allure-results/` içine yazılır
+
+### Rapor Görüntüleme
+```bash
+mvn allure:serve
+```
+- Allure raporu otomatik olarak tarayıcıda açılır
+
 ---
 
 ## 🛠️ Teknik Detaylar
@@ -62,12 +87,14 @@ src/
 │  └─ java/
 │     └─ clickautomation/
 │        ├─ Wait.java
-│        └─ XPathClickAuto.java       # main program (public static void main)
+│        └─ XPathClickAuto.java        # main runner
 └─ test/
    └─ java/
       └─ clickautomation/
-         └─ XPathClickAutoTest.java   # example JUnit 5 test
-screenshots/                          # runtime screenshots (gitignored)
+         ├─ XPathClickAutoTest.java    # JUnit 5 test
+         ├─ AllureUtils.java           # screenshot helpers
+         └─ AllureTestWatcher.java     # auto-failure screenshots
+screenshots/                           # runtime screenshots (gitignored)
 pom.xml
 ```
 
@@ -76,6 +103,20 @@ pom.xml
 - Selenium WebDriver
 - Maven
 - WebDriverManager
+
+---
+## 🖼 Örnek Test
+
+```java
+@Test
+@DisplayName("İletişim sayfasına git")
+void contactPageLoads() {
+    driver.get("https://www.simsoft.com.tr/en");
+    AllureUtils.clickWithScreenshots(driver,
+        By.xpath("//a[contains(.,'Contact')]"), "Contact link");
+    Assertions.assertTrue(driver.getTitle().toLowerCase().contains("contact"));
+}
+```
 
 ---
 
@@ -124,6 +165,13 @@ Eğer bu proje hoşuna gittiyse, ⭐ vererek destek olabilirsin!
 - **Multiple Selector Processing**: Handles multiple XPath and CSS selectors in sequence.
 - **Easy Customization**: Update `xpaths[]` and `cssSelectors[]` arrays easily.
 - **Cross-Platform**: Works on Windows, macOS, and Linux.
+- **JUnit 5 tests** under `src/test/java`
+- **Allure integration**:
+   - Test results saved in `target/allure-results/`
+   - Automatic failure screenshot + page source
+   - Optional before/after click screenshots in reports
+- **Allure Dashboard**: run `mvn allure:serve`
+
 
 ---
 
@@ -155,6 +203,22 @@ git clone https://github.com/username/xpath-click-automation.git
 3. **Run the Project**:  
    The script will click all elements and save screenshots.
 
+### Normal Execution
+Run the `XPathClickAuto.java` main method to start the click scenario.
+
+### Running Tests
+```bash
+mvn clean test
+```
+- JUnit tests will run
+- Results are saved into `target/allure-results/`
+
+### Viewing the Report
+```bash
+mvn allure:serve
+```
+- The Allure report will automatically open in your browser
+
 ---
 
 ## 🛠️ Technical Details
@@ -166,12 +230,14 @@ src/
 │  └─ java/
 │     └─ clickautomation/
 │        ├─ Wait.java
-│        └─ XPathClickAuto.java       # main program (public static void main)
+│        └─ XPathClickAuto.java        # main runner
 └─ test/
    └─ java/
       └─ clickautomation/
-         └─ XPathClickAutoTest.java   # example JUnit 5 test
-screenshots/                          # runtime screenshots (gitignored)
+         ├─ XPathClickAutoTest.java    # JUnit 5 test
+         ├─ AllureUtils.java           # screenshot helpers
+         └─ AllureTestWatcher.java     # auto-failure screenshots
+screenshots/                           # runtime screenshots (gitignored)
 pom.xml
 ```
 
@@ -180,6 +246,21 @@ pom.xml
 - Selenium WebDriver
 - Maven
 - WebDriverManager
+
+---
+
+## 🖼 Example Test
+
+```java
+@Test
+@DisplayName("Navigate to Contact page")
+void contactPageLoads() {
+    driver.get("https://www.simsoft.com.tr/en");
+    AllureUtils.clickWithScreenshots(driver,
+        By.xpath("//a[contains(.,'Contact')]"), "Contact link");
+    Assertions.assertTrue(driver.getTitle().toLowerCase().contains("contact"));
+}
+```
 
 ---
 
@@ -196,14 +277,6 @@ pom.xml
 3. Commit your changes (`git commit -m "Added new feature"`)
 4. Push to the branch (`git push origin feature/new-feature`)
 5. Open a Pull Request
-
----
-
-## 🔮 Future Enhancements
-- 🔍 Dynamic element detection
-- 📝 Load test scenarios from external files
-- 🌐 Multi-browser support
-- 📊 HTML report generation
 
 ---
 
